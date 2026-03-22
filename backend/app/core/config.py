@@ -1,23 +1,24 @@
+import os
 from pydantic_settings import BaseSettings
-from typing import Optional
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "mysql://usuario_app:senha_app@mysql:3306/objetivos_db"
+    SQLALCHEMY_DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "mysql+pymysql://root:senha-mysql@mysql:3306/objetivos_db"
+    )
     
     # JWT
-    SECRET_KEY: str = "sua-chave-secreta-super-segura-change-this-in-production"
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "sua-chave-secreta-super-segura-aqui-nao-use-em-producao")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     
-    # API
-    API_V1_STR: str = "/api/v1"
-    PROJECT_NAME: str = "Sistema de Apoio ao Foco em Objetivos Pessoais"
-    PROJECT_VERSION: str = "1.0.0"
+    # App
+    APP_NAME: str = "Sistema de Apoio ao Foco em Objetivos Pessoais"
+    DEBUG: bool = os.getenv("DEBUG", "True").lower() == "true"
     
     class Config:
         env_file = ".env"
-        case_sensitive = True
 
 settings = Settings()
